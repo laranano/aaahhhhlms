@@ -420,17 +420,14 @@ namespace LMS_CustomIdentity.Controllers
                     var submission = db.Submitteds
                         .FirstOrDefault(s => s.AssignmentId == a.AssignmentId && s.StudentId == uid);
 
-                    double score = submission?.Score ?? 0;
-
-                    earned += score;
-                    possible += a.MaxPoints;
+                    earned += (double)(submission?.Score ?? 0);
+                    possible += (double)(a.MaxPoints);
                 }
 
                 if (possible == 0)
                     continue;
 
                 double categoryPercent = earned / possible;
-
                 totalWeightedScore += categoryPercent * cat.GradeWeight;
                 totalWeights += cat.GradeWeight;
             }
@@ -438,7 +435,8 @@ namespace LMS_CustomIdentity.Controllers
             if (totalWeights == 0)
                 return "--";
 
-            double finalPercent = (totalWeightedScore / totalWeights) * 100;
+            double scalingFactor = 100.0 / totalWeights;
+            double finalPercent = totalWeightedScore * scalingFactor;
 
             return ConvertToLetterGrade(finalPercent);
         }
