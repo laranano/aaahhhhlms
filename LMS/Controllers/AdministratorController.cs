@@ -51,15 +51,12 @@ namespace LMS.Controllers
         /// false if the department already exists, true otherwise.</returns>
         public IActionResult CreateDepartment(string subject, string name)
         {
+            if (db.Departments.Any(d => d.Abbreviation == subject))
+                return Json(new { success = false });
+
             try
             {
-                Department dept = new Department
-                {
-                    Abbreviation = subject,
-                    Name = name
-                };
-
-                db.Departments.Add(dept);
+                db.Departments.Add(new Department { Abbreviation = subject, Name = name });
                 db.SaveChanges();
                 return Json(new { success = true });
             }
@@ -171,7 +168,7 @@ namespace LMS.Controllers
                 c.Location == location &&
                 c.Season == season &&
                 c.Year == (ushort)year &&
-                c.StartTime < endTimeOnly && 
+                c.StartTime < endTimeOnly &&
                 c.EndTime > startTimeOnly);
 
             if (timeConflict)
@@ -195,7 +192,7 @@ namespace LMS.Controllers
                     Season = season,
                     Year = (ushort)year,
                     StartTime = startTimeOnly,
-                    EndTime = endTimeOnly, 
+                    EndTime = endTimeOnly,
                     Location = location,
                     ProfessorId = instructor
                 };

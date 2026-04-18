@@ -58,13 +58,13 @@ namespace LMS.Controllers
                         {
                             subject = d.Abbreviation,
                             dname = d.Name,
-                            courses = from c in db.Courses
+                            courses = (from c in db.Courses
                                       where c.CourseDeptAbbreviation == d.Abbreviation
                                       select new
                                       {
                                           number = c.CourseNum,
                                           cname = c.Name
-                                      }
+                                      }).ToList()
                         };
 
             return Json(query.ToArray());
